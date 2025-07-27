@@ -80,6 +80,7 @@ module.exports = (env, argv) => {
         path.resolve(__dirname, '../../../node_modules'),
         SRC_DIR,
         path.resolve(__dirname, 'modes/ohif-mode-export/node_modules'),
+        path.resolve(__dirname, 'extensions/ohif-ext-export/node_modules'),
       ],
     },
     plugins: [

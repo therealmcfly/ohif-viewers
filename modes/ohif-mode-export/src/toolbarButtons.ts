@@ -661,7 +661,7 @@ const toolbarButtons: Button[] = [
       icon: 'tool-zoom',
       label: 'Export ZIP',
       tooltip: 'Download active image and metadata as ZIP',
-      commands: 'exportZipCommand',
+      commands: 'exportZip',
       evaluate: 'evaluate.action',
     },
   },
