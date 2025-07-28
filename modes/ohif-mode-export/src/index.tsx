@@ -140,7 +140,7 @@ function modeFactory({ modeConfiguration }) {
      */
     routes: [
       {
-        path: 'export',
+        path: 'template',
         layoutTemplate: ({ location, servicesManager }) => {
           return {
             id: ohif.layout,
