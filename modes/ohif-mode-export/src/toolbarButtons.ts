@@ -658,7 +658,7 @@ const toolbarButtons: Button[] = [
     id: 'Export-Zip',
     uiType: 'ohif.toolButton',
     props: {
-      icon: 'tool-zoom',
+      icon: 'export',
       label: 'Export ZIP',
       tooltip: 'Download active image and metadata as ZIP',
       commands: 'exportZip',

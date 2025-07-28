@@ -1,5 +1,4 @@
 import { hotkeys } from '@ohif/core';
-// import { initToolGroups, toolbarButtons } from '@ohif/mode-longitudinal';
 import initToolGroups from './initToolGroups';
 import toolbarButtons from './toolbarButtons';
 import { id } from './id';
