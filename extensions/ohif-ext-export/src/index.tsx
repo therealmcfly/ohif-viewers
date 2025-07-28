@@ -1,6 +1,7 @@
 import onModeEnter from 'extensions/cornerstone-dicom-sr/src/onModeEnter';
 import { id } from './id';
-import { imageLoader } from '@cornerstonejs/core';
+import getActiveCanvas from './getActiveCanvas';
+import exportZip from './exportZip';
 
 /**
  * You can remove any of the following modules if you don't need them.
@@ -88,15 +89,24 @@ export default {
         exportZip: {
           commandFn: () => {
             // Get all elements in the viewport grid
-            const panes = document.querySelectorAll('.group\\/pane');
+            const elements = document.querySelectorAll('.group\\/pane');
 
-            // if (panes.length > 1) {
-            //   alert('Please choose select in to a single viewport that you want to export.');
-            //   return;
-            // }
+            if (elements.length > 1) {
+              alert(
+                'Please display a single sections image that you wish to export. You can do this by double-clicking on the viewport with the section you wish to select.'
+              );
+              return;
+            }
+            // Get the active image from the viewport
+            const canvas = getActiveCanvas(elements);
+            console.log('Active Canvas:', canvas);
+            if (!canvas) {
+              alert('No canvas found for the active viewport.');
+              return;
+            }
 
+            // Get the patient name and study date
             const { viewportGridService, displaySetService } = servicesManager.services;
-
             // Fetch the viewport ID
             const viewportId: string = viewportGridService.getActiveViewportId();
             // Retrieve displayset ID from viewport data
@@ -110,36 +120,11 @@ export default {
             const patientName: string =
               displaySet?.instance?.PatientName[0]?.Alphabetic ?? 'undefined';
             const studyDate: string = displaySet?.instance?.StudyDate ?? 'undefined';
+            // Add image to zip (as base64)
+            const jpegBase64Url = canvas.toDataURL('image/jpeg');
 
-            let canvas;
-
-            panes.forEach(pane => {
-              const children = pane.children;
-              const overlayDiv = children[1]; // 2nd child (border info)
-              const contentDiv = children[0]; // 1st child (viewport content)
-
-              if (overlayDiv?.classList.contains('border-highlight')) {
-                // console.log(overlayDiv);
-                canvas = contentDiv.querySelector('canvas');
-                return;
-              }
-            });
-            if (!canvas) {
-              alert('No canvas found for the active viewport.');
-              return;
-            }
-
-            const jpegDataUrl = canvas.toDataURL('image/jpeg');
-
-            // //download it as a file
-            // const link = document.createElement('a');
-            // link.href = jpegDataUrl;
-            // link.download = `${patientName}_${studyDate}.jpg`.replace(/\s+/g, '_');
-            // document.body.appendChild(link);
-            // link.click();
-            // document.body.removeChild(link);
-
-            console.log(`patient ${patientName}, study date ${studyDate}`);
+            // create a zip file with metadata and image and trigger download
+            exportZip(patientName, studyDate, jpegBase64Url);
           },
         },
       },
